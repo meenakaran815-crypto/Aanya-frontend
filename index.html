@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#7c3aed"><link rel="manifest" href="manifest.json">
+<title>Aanya — AI Dost</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,sans-serif;background:#0f0f14;color:#fff;height:100vh}
+.app{height:100dvh;display:flex;flex-direction:column;max-width:760px;margin:auto;background:#14141b}
+header{padding:14px 16px;display:flex;align-items:center;gap:12px;background:#191922;border-bottom:1px solid #292936}
+.avatar{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:#7c3aed;font-size:22px}
+h1{font-size:18px;margin:0}.status{font-size:12px;color:#a7f3d0}
+#chat{flex:1;overflow:auto;padding:18px 14px;display:flex;flex-direction:column;gap:10px}
+.msg{max-width:82%;padding:11px 14px;border-radius:18px;line-height:1.45;white-space:pre-wrap;word-break:break-word}
+.user{align-self:flex-end;background:#7c3aed;border-bottom-right-radius:5px}
+.aanya{align-self:flex-start;background:#262631;border-bottom-left-radius:5px}
+.typing{opacity:.7;font-style:italic}.welcome{margin:auto;text-align:center;opacity:.8}
+form{display:flex;gap:8px;padding:10px;padding-bottom:max(10px,env(safe-area-inset-bottom));background:#191922;border-top:1px solid #292936}
+textarea{flex:1;resize:none;border:0;outline:0;border-radius:18px;padding:12px 14px;background:#252530;color:#fff;min-height:46px;max-height:120px;font:inherit}
+button{width:48px;height:48px;border:0;border-radius:50%;background:#7c3aed;color:#fff;font-size:20px}
+button:disabled{opacity:.45}
+</style></head>
+<body><div class="app">
+<header><div class="avatar">A</div><div><h1>Aanya</h1><div class="status">● Online • AI Dost</div></div></header>
+<main id="chat"><div class="welcome" id="welcome"><h2>Namaste 👋</h2><div>Main Aanya hoon. Baat shuru karein?</div></div></main>
+<form id="form"><textarea id="input" rows="1" placeholder="Aanya ko message bhejo…"></textarea><button id="send" type="submit">➤</button></form>
+</div>
+<script>
+const API="https://aanya-backend-2.onrender.com/chat",chat=document.getElementById("chat"),form=document.getElementById("form"),input=document.getElementById("input"),send=document.getElementById("send"),welcome=document.getElementById("welcome");
+function add(t,w){if(welcome)welcome.remove();let d=document.createElement("div");d.className="msg "+w;d.textContent=t;chat.appendChild(d);chat.scrollTop=chat.scrollHeight;return d}
+form.onsubmit=async e=>{e.preventDefault();let message=input.value.trim();if(!message||send.disabled)return;add(message,"user");input.value="";send.disabled=true;let t=add("Aanya soch rahi hai…","aanya typing");
+try{let r=await fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message})}),d=await r.json().catch(()=>({}));if(!r.ok)throw Error(d.error||("Server error "+r.status));t.remove();add(d.reply||"Mujhe reply nahi mila.","aanya")}
+catch(err){t.remove();add("Abhi connection mein problem aa gayi. Thodi der baad phir try karo.\n\n("+err.message+")","aanya")}
+finally{send.disabled=false;input.focus()}};
+input.oninput=()=>{input.style.height="46px";input.style.height=Math.min(input.scrollHeight,120)+"px"};
+input.onkeydown=e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();form.requestSubmit()}};
+if("serviceWorker"in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
+</script></body></html>
