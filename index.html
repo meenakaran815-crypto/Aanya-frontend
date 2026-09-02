@@ -1,38 +1,138 @@
 <!doctype html>
 <html lang="hi">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#7c3aed"><link rel="manifest" href="manifest.json">
-<title>Aanya — AI Dost</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b0b10">
+<link rel="manifest" href="manifest.json">
+<title>Aanya — Video Call</title>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:system-ui,sans-serif;background:#0f0f14;color:#fff;height:100vh}
-.app{height:100dvh;display:flex;flex-direction:column;max-width:760px;margin:auto;background:#14141b}
-header{padding:14px 16px;display:flex;align-items:center;gap:12px;background:#191922;border-bottom:1px solid #292936}
-.avatar{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:#7c3aed;font-size:22px}
-h1{font-size:18px;margin:0}.status{font-size:12px;color:#a7f3d0}
-#chat{flex:1;overflow:auto;padding:18px 14px;display:flex;flex-direction:column;gap:10px}
-.msg{max-width:82%;padding:11px 14px;border-radius:18px;line-height:1.45;white-space:pre-wrap;word-break:break-word}
-.user{align-self:flex-end;background:#7c3aed;border-bottom-right-radius:5px}
-.aanya{align-self:flex-start;background:#262631;border-bottom-left-radius:5px}
-.typing{opacity:.7;font-style:italic}.welcome{margin:auto;text-align:center;opacity:.8}
-form{display:flex;gap:8px;padding:10px;padding-bottom:max(10px,env(safe-area-inset-bottom));background:#191922;border-top:1px solid #292936}
-textarea{flex:1;resize:none;border:0;outline:0;border-radius:18px;padding:12px 14px;background:#252530;color:#fff;min-height:46px;max-height:120px;font:inherit}
-button{width:48px;height:48px;border:0;border-radius:50%;background:#7c3aed;color:#fff;font-size:20px}
-button:disabled{opacity:.45}
-</style></head>
-<body><div 
-        <div class="avatar"><img src="aanya.png" alt="Aanya" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"></div>
-<main id="chat"><div class="welcome" id="welcome"><h2>Namaste 👋</h2><div>Main Aanya hoon. Baat shuru karein?</div></div></main>
-<form id="form"><textarea id="input" rows="1" placeholder="Aanya ko message bhejo…"></textarea><button id="send" type="submit">➤</button></form>
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#050507;color:#fff;font-family:system-ui,-apple-system,sans-serif}
+.call{position:relative;width:100%;height:100dvh;background:#111;overflow:hidden}
+#remote{width:100%;height:100%;object-fit:cover;background:linear-gradient(160deg,#3b3440,#15131a)}
+.placeholder{position:absolute;inset:0;display:grid;place-items:center;text-align:center;background:radial-gradient(circle at 50% 35%,#3b3540 0,#15131a 45%,#08080b 100%);z-index:1}
+.face{width:150px;height:150px;border-radius:50%;display:grid;place-items:center;background:#7c3aed;font-size:70px;box-shadow:0 15px 50px #0008}
+.placeholder h2{margin:18px 0 4px;font-size:24px}
+.placeholder p{margin:0;color:#c8c8d0}
+.top{position:absolute;top:0;left:0;right:0;padding:18px 16px;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(#0009,transparent);z-index:4}
+.name{font-size:19px;font-weight:700}.online{font-size:12px;color:#9ff0be;margin-top:2px}
+.actions{display:flex;gap:9px}.round{width:42px;height:42px;border:0;border-radius:50%;background:#111a;color:#fff;font-size:19px}
+.self{position:absolute;right:14px;top:78px;width:105px;height:145px;border-radius:15px;overflow:hidden;background:#25232b;border:1px solid #ffffff55;box-shadow:0 8px 25px #0008;z-index:5}
+#local{width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}
+.self span{position:absolute;left:8px;bottom:7px;font-size:11px;background:#0008;padding:3px 7px;border-radius:8px}
+.status{position:absolute;left:0;right:0;bottom:122px;text-align:center;z-index:4;font-size:13px;text-shadow:0 1px 5px #000}
+.controls{position:absolute;bottom:0;left:0;right:0;padding:20px 18px calc(18px + env(safe-area-inset-bottom));display:flex;justify-content:center;gap:15px;background:linear-gradient(transparent,#000c);z-index:6}
+.control{width:55px;height:55px;border:0;border-radius:50%;background:#292931dd;color:#fff;font-size:22px}
+.end{width:64px;height:64px;background:#ef3340;font-size:26px}
+.chatbox{position:absolute;left:14px;right:14px;bottom:105px;z-index:5;pointer-events:none}
+.bubble{display:table;max-width:75%;margin:5px 0;padding:8px 11px;border-radius:15px;background:#0008;font-size:13px}
+.bubble.me{margin-left:auto;background:#7c3aed}
+.toast{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);padding:12px 18px;border-radius:20px;background:#000b;z-index:10;display:none}
+</style>
+</head>
+<body>
+<div class="call">
+  <video id="remote" autoplay playsinline></video>
+
+  <div class="placeholder" id="placeholder">
+    <div>
+      <div class="face">A</div>
+      <h2>Aanya ❤️</h2>
+      <p>Video call ke liye ready</p>
+    </div>
+  </div>
+
+  <div class="top">
+    <div>
+      <div class="name">Aanya ❤️</div>
+      <div class="online">● Online</div>
+    </div>
+    <div class="actions">
+      <button class="round" id="switch" title="Camera switch">↻</button>
+      <button class="round" id="more" title="More">⋮</button>
+    </div>
+  </div>
+
+  <div class="self" id="selfBox">
+    <video id="local" autoplay muted playsinline></video>
+    <span>You</span>
+  </div>
+
+  <div class="status" id="status">Camera start karne ke liye 📷 dabao</div>
+
+  <div class="chatbox" id="chatbox">
+    <div class="bubble">Hii 👋</div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <div class="controls">
+    <button class="control" id="cam" title="Camera">📷</button>
+    <button class="control" id="mic" title="Microphone">🎙️</button>
+    <button class="control end" id="end" title="End call">☎</button>
+    <button class="control" id="speaker" title="Speaker">🔊</button>
+  </div>
 </div>
+
 <script>
-const API="https://aanya-backend-2.onrender.com/chat",chat=document.getElementById("chat"),form=document.getElementById("form"),input=document.getElementById("input"),send=document.getElementById("send"),welcome=document.getElementById("welcome");
-function add(t,w){if(welcome)welcome.remove();let d=document.createElement("div");d.className="msg "+w;d.textContent=t;chat.appendChild(d);chat.scrollTop=chat.scrollHeight;return d}
-form.onsubmit=async e=>{e.preventDefault();let message=input.value.trim();if(!message||send.disabled)return;add(message,"user");input.value="";send.disabled=true;let t=add("Aanya soch rahi hai…","aanya typing");
-try{let r=await fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message})}),d=await r.json().catch(()=>({}));if(!r.ok)throw Error(d.error||("Server error "+r.status));t.remove();add(d.reply||"Mujhe reply nahi mila.","aanya")}
-catch(err){t.remove();add("Abhi connection mein problem aa gayi. Thodi der baad phir try karo.\n\n("+err.message+")","aanya")}
-finally{send.disabled=false;input.focus()}};
-input.oninput=()=>{input.style.height="46px";input.style.height=Math.min(input.scrollHeight,120)+"px"};
-input.onkeydown=e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();form.requestSubmit()}};
-if("serviceWorker"in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
-</script></body></html>
+const local=document.getElementById("local"), remote=document.getElementById("remote");
+const placeholder=document.getElementById("placeholder"), statusEl=document.getElementById("status");
+const toast=document.getElementById("toast");
+let stream=null, facing="user", micOn=true, camOn=true;
+
+function showToast(text){
+  toast.textContent=text; toast.style.display="block";
+  clearTimeout(showToast.t); showToast.t=setTimeout(()=>toast.style.display="none",1600);
+}
+
+async function startCamera(){
+  if(!navigator.mediaDevices?.getUserMedia){
+    showToast("Is browser me camera support nahi hai"); return;
+  }
+  try{
+    if(stream) stream.getTracks().forEach(t=>t.stop());
+    stream=await navigator.mediaDevices.getUserMedia({
+      video:{facingMode:facing,width:{ideal:1280},height:{ideal:720}}, audio:true
+    });
+    local.srcObject=stream;
+    placeholder.style.display="none";
+    statusEl.textContent="● Connected";
+    camOn=true; micOn=true;
+  }catch(e){
+    showToast("Camera/mic permission allow karo");
+    statusEl.textContent="Camera permission nahi mili";
+  }
+}
+
+document.getElementById("cam").onclick=async()=>{
+  if(!stream){await startCamera();return}
+  camOn=!camOn; stream.getVideoTracks().forEach(t=>t.enabled=camOn);
+  document.getElementById("cam").textContent=camOn?"📷":"🚫";
+  statusEl.textContent=camOn?"Camera on":"Camera off";
+};
+
+document.getElementById("mic").onclick=()=>{
+  if(!stream)return;
+  micOn=!micOn; stream.getAudioTracks().forEach(t=>t.enabled=micOn);
+  document.getElementById("mic").textContent=micOn?"🎙️":"🔇";
+};
+
+document.getElementById("switch").onclick=async()=>{
+  facing=facing==="user"?"environment":"user";
+  await startCamera();
+};
+
+document.getElementById("speaker").onclick=()=>showToast("Speaker toggle");
+document.getElementById("more").onclick=()=>showToast("More options");
+document.getElementById("end").onclick=()=>{
+  if(stream) stream.getTracks().forEach(t=>t.stop());
+  stream=null; local.srcObject=null; placeholder.style.display="grid";
+  statusEl.textContent="Call ended";
+  showToast("Call ended");
+};
+
+window.addEventListener("beforeunload",()=>stream?.getTracks().forEach(t=>t.stop()));
+</script>
+</body>
+</html>
