@@ -3,136 +3,480 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#0b0b10">
-<link rel="manifest" href="manifest.json">
-<title>Aanya — Video Call</title>
+<meta name="theme-color" content="#08080c">
+<title>Aanya ❤️ Video Call</title>
+
 <style>
 *{box-sizing:border-box}
-html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#050507;color:#fff;font-family:system-ui,-apple-system,sans-serif}
-.call{position:relative;width:100%;height:100dvh;background:#111;overflow:hidden}
-#remote{width:100%;height:100%;object-fit:cover;background:linear-gradient(160deg,#3b3440,#15131a)}
-.placeholder{position:absolute;inset:0;display:grid;place-items:center;text-align:center;background:radial-gradient(circle at 50% 35%,#3b3540 0,#15131a 45%,#08080b 100%);z-index:1}
-.face{width:150px;height:150px;border-radius:50%;display:grid;place-items:center;background:#7c3aed;font-size:70px;box-shadow:0 15px 50px #0008}
-.placeholder h2{margin:18px 0 4px;font-size:24px}
-.placeholder p{margin:0;color:#c8c8d0}
-.top{position:absolute;top:0;left:0;right:0;padding:18px 16px;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(#0009,transparent);z-index:4}
-.name{font-size:19px;font-weight:700}.online{font-size:12px;color:#9ff0be;margin-top:2px}
-.actions{display:flex;gap:9px}.round{width:42px;height:42px;border:0;border-radius:50%;background:#111a;color:#fff;font-size:19px}
-.self{position:absolute;right:14px;top:78px;width:105px;height:145px;border-radius:15px;overflow:hidden;background:#25232b;border:1px solid #ffffff55;box-shadow:0 8px 25px #0008;z-index:5}
-#local{width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}
-.self span{position:absolute;left:8px;bottom:7px;font-size:11px;background:#0008;padding:3px 7px;border-radius:8px}
-.status{position:absolute;left:0;right:0;bottom:122px;text-align:center;z-index:4;font-size:13px;text-shadow:0 1px 5px #000}
-.controls{position:absolute;bottom:0;left:0;right:0;padding:20px 18px calc(18px + env(safe-area-inset-bottom));display:flex;justify-content:center;gap:15px;background:linear-gradient(transparent,#000c);z-index:6}
-.control{width:55px;height:55px;border:0;border-radius:50%;background:#292931dd;color:#fff;font-size:22px}
-.end{width:64px;height:64px;background:#ef3340;font-size:26px}
-.chatbox{position:absolute;left:14px;right:14px;bottom:105px;z-index:5;pointer-events:none}
-.bubble{display:table;max-width:75%;margin:5px 0;padding:8px 11px;border-radius:15px;background:#0008;font-size:13px}
-.bubble.me{margin-left:auto;background:#7c3aed}
-.toast{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);padding:12px 18px;border-radius:20px;background:#000b;z-index:10;display:none}
+
+html,body{
+ margin:0;
+ width:100%;
+ height:100%;
+ overflow:hidden;
+ background:#08080c;
+ color:#fff;
+ font-family:system-ui,-apple-system,sans-serif
+}
+
+.call{
+ position:relative;
+ width:100%;
+ height:100dvh;
+ overflow:hidden;
+ background:radial-gradient(circle at 50% 30%,#3a3040,#111018 55%,#07070a)
+}
+
+#remote{
+ position:absolute;
+ inset:0;
+ width:100%;
+ height:100%;
+ object-fit:cover
+}
+
+.avatar{
+ position:absolute;
+ inset:0;
+ display:grid;
+ place-items:center;
+ text-align:center;
+ background:radial-gradient(circle at 50% 35%,#403747,#15131b 50%,#07070a)
+}
+
+.face{
+ width:155px;
+ height:155px;
+ border-radius:50%;
+ display:grid;
+ place-items:center;
+ background:#7040b5;
+ font-size:72px;
+ box-shadow:0 18px 55px #0009
+}
+
+.avatar h2{
+ margin:18px 0 3px;
+ font-size:25px
+}
+
+.avatar p{
+ margin:0;
+ color:#c8c4cf
+}
+
+.top{
+ position:absolute;
+ z-index:5;
+ top:0;
+ left:0;
+ right:0;
+ padding:18px 15px;
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ background:linear-gradient(#000b,transparent)
+}
+
+.name{
+ font-size:19px;
+ font-weight:700
+}
+
+.online{
+ font-size:12px;
+ color:#a6f2c0;
+ margin-top:2px
+}
+
+.actions{
+ display:flex;
+ gap:8px
+}
+
+button{
+ border:0;
+ color:#fff;
+ cursor:pointer
+}
+
+.round{
+ width:42px;
+ height:42px;
+ border-radius:50%;
+ background:#15151bcc;
+ font-size:19px
+}
+
+.self{
+ position:absolute;
+ z-index:6;
+ right:14px;
+ top:80px;
+ width:105px;
+ height:145px;
+ border-radius:15px;
+ overflow:hidden;
+ background:#25242b;
+ border:1px solid #ffffff55;
+ box-shadow:0 8px 28px #0009
+}
+
+#local{
+ width:100%;
+ height:100%;
+ object-fit:cover;
+ transform:scaleX(-1)
+}
+
+.self span{
+ position:absolute;
+ bottom:7px;
+ left:7px;
+ background:#0009;
+ padding:3px 7px;
+ border-radius:8px;
+ font-size:11px
+}
+
+.status{
+ position:absolute;
+ z-index:5;
+ left:0;
+ right:0;
+ bottom:122px;
+ text-align:center;
+ font-size:13px;
+ text-shadow:0 1px 6px #000
+}
+
+.chat{
+ position:absolute;
+ z-index:5;
+ left:13px;
+ right:13px;
+ bottom:170px;
+ max-height:30vh;
+ overflow:hidden;
+ pointer-events:none
+}
+
+.b{
+ display:table;
+ max-width:80%;
+ padding:8px 11px;
+ margin:5px 0;
+ border-radius:15px;
+ background:#000a;
+ font-size:13px;
+ line-height:1.35
+}
+
+.b.me{
+ margin-left:auto;
+ background:#7040b5
+}
+
+.controls{
+ position:absolute;
+ z-index:7;
+ left:0;
+ right:0;
+ bottom:0;
+ padding:20px 15px calc(18px + env(safe-area-inset-bottom));
+ display:flex;
+ justify-content:center;
+ gap:11px;
+ background:linear-gradient(transparent,#000d)
+}
+
+.control{
+ width:55px;
+ height:55px;
+ border-radius:50%;
+ background:#292932e8;
+ font-size:22px
+}
+
+.end{
+ width:64px;
+ height:64px;
+ background:#ed3442;
+ font-size:26px
+}
+
+.toast{
+ position:absolute;
+ z-index:10;
+ top:50%;
+ left:50%;
+ transform:translate(-50%,-50%);
+ background:#000d;
+ padding:12px 18px;
+ border-radius:20px;
+ display:none;
+ font-size:13px
+}
+
+.speaking{
+ animation:pulse .8s infinite alternate
+}
+
+@keyframes pulse{
+ from{box-shadow:0 0 0 0 #7040b566}
+ to{box-shadow:0 0 0 17px #7040b500}
+}
 </style>
 </head>
+
 <body>
+
 <div class="call">
-  <video id="remote" autoplay playsinline></video>
 
-  <div class="placeholder" id="placeholder">
-    <div>
-      <div class="face">A</div>
-      <h2>Aanya ❤️</h2>
-      <p>Video call ke liye ready</p>
-    </div>
-  </div>
+<video id="remote" autoplay playsinline></video>
 
-  <div class="top">
-    <div>
-      <div class="name">Aanya ❤️</div>
-      <div class="online">● Online</div>
-    </div>
-    <div class="actions">
-      <button class="round" id="switch" title="Camera switch">↻</button>
-      <button class="round" id="more" title="More">⋮</button>
-    </div>
-  </div>
-
-  <div class="self" id="selfBox">
-    <video id="local" autoplay muted playsinline></video>
-    <span>You</span>
-  </div>
-
-  <div class="status" id="status">Camera start karne ke liye 📷 dabao</div>
-
-  <div class="chatbox" id="chatbox">
-    <div class="bubble">Hii 👋</div>
-  </div>
-
-  <div class="toast" id="toast"></div>
-
-  <div class="controls">
-    <button class="control" id="cam" title="Camera">📷</button>
-    <button class="control" id="mic" title="Microphone">🎙️</button>
-    <button class="control end" id="end" title="End call">☎</button>
-    <button class="control" id="speaker" title="Speaker">🔊</button>
-  </div>
+<div class="avatar" id="avatar">
+ <div>
+  <div class="face">A</div>
+  <h2>Aanya ❤️</h2>
+  <p>Voice video call</p>
+ </div>
 </div>
 
+<div class="top">
+ <div>
+  <div class="name">Aanya ❤️</div>
+  <div class="online">● Online</div>
+ </div>
+
+ <div class="actions">
+  <button class="round" id="switch">↻</button>
+  <button class="round" id="more">⋮</button>
+ </div>
+</div>
+
+<div class="self">
+ <video id="local" autoplay muted playsinline></video>
+ <span>You</span>
+</div>
+
+<div class="status" id="status">
+ 🎙️ Voice button dabakar Aanya se baat karo
+</div>
+
+<div class="chat" id="chat">
+ <div class="b">
+  Hii 👋 Main Aanya hoon. Bolo na ❤️
+ </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="controls">
+
+ <button class="control" id="cam">📷</button>
+
+ <button class="control" id="mic">🎙️</button>
+
+ <button class="control end" id="end">☎</button>
+
+ <button class="control" id="talk">🗣️</button>
+
+ <button class="control" id="speaker">🔊</button>
+
+</div>
+
+</div>
+
+
 <script>
-const local=document.getElementById("local"), remote=document.getElementById("remote");
-const placeholder=document.getElementById("placeholder"), statusEl=document.getElementById("status");
+
+/* Aanya Backend */
+const API="https://aanya-backend-2.onrender.com/chat";
+
+const local=document.getElementById("local");
+const avatar=document.getElementById("avatar");
+const statusEl=document.getElementById("status");
+const chat=document.getElementById("chat");
 const toast=document.getElementById("toast");
-let stream=null, facing="user", micOn=true, camOn=true;
+const talk=document.getElementById("talk");
 
-function showToast(text){
-  toast.textContent=text; toast.style.display="block";
-  clearTimeout(showToast.t); showToast.t=setTimeout(()=>toast.style.display="none",1600);
+let stream=null;
+let facing="user";
+let micOn=true;
+let camOn=true;
+let listening=false;
+let recognition=null;
+
+
+/* Toast */
+function toastMsg(text){
+
+ toast.textContent=text;
+ toast.style.display="block";
+
+ clearTimeout(toastMsg.timer);
+
+ toastMsg.timer=setTimeout(()=>{
+  toast.style.display="none";
+ },1800);
 }
 
-async function startCamera(){
-  if(!navigator.mediaDevices?.getUserMedia){
-    showToast("Is browser me camera support nahi hai"); return;
-  }
-  try{
-    if(stream) stream.getTracks().forEach(t=>t.stop());
-    stream=await navigator.mediaDevices.getUserMedia({
-      video:{facingMode:facing,width:{ideal:1280},height:{ideal:720}}, audio:true
-    });
-    local.srcObject=stream;
-    placeholder.style.display="none";
-    statusEl.textContent="● Connected";
-    camOn=true; micOn=true;
-  }catch(e){
-    showToast("Camera/mic permission allow karo");
-    statusEl.textContent="Camera permission nahi mili";
-  }
+
+/* Chat Bubble */
+function bubble(text,me=false){
+
+ const b=document.createElement("div");
+
+ b.className="b"+(me?" me":"");
+
+ b.textContent=text;
+
+ chat.appendChild(b);
+
+ while(chat.children.length>5){
+  chat.removeChild(chat.firstChild);
+ }
 }
 
-document.getElementById("cam").onclick=async()=>{
-  if(!stream){await startCamera();return}
-  camOn=!camOn; stream.getVideoTracks().forEach(t=>t.enabled=camOn);
-  document.getElementById("cam").textContent=camOn?"📷":"🚫";
-  statusEl.textContent=camOn?"Camera on":"Camera off";
-};
 
-document.getElementById("mic").onclick=()=>{
-  if(!stream)return;
-  micOn=!micOn; stream.getAudioTracks().forEach(t=>t.enabled=micOn);
-  document.getElementById("mic").textContent=micOn?"🎙️":"🔇";
-};
+/* Aanya Voice */
+function speak(text){
 
-document.getElementById("switch").onclick=async()=>{
-  facing=facing==="user"?"environment":"user";
-  await startCamera();
-};
+ if(!("speechSynthesis" in window)){
+  toastMsg("Phone browser voice support nahi karta");
+  return;
+ }
 
-document.getElementById("speaker").onclick=()=>showToast("Speaker toggle");
-document.getElementById("more").onclick=()=>showToast("More options");
-document.getElementById("end").onclick=()=>{
-  if(stream) stream.getTracks().forEach(t=>t.stop());
-  stream=null; local.srcObject=null; placeholder.style.display="grid";
-  statusEl.textContent="Call ended";
-  showToast("Call ended");
-};
+ speechSynthesis.cancel();
 
-window.addEventListener("beforeunload",()=>stream?.getTracks().forEach(t=>t.stop()));
-</script>
-</body>
-</html>
+ const u=new SpeechSynthesisUtterance(text);
+
+ u.lang="hi-IN";
+ u.rate=.96;
+ u.pitch=1.05;
+ u.volume=1;
+
+ u.onstart=()=>{
+
+  talk.classList.add("speaking");
+
+  statusEl.textContent=
+  "Aanya bol rahi hai… 🔊";
+
+ };
+
+ u.onend=()=>{
+
+  talk.classList.remove("speaking");
+
+  statusEl.textContent=
+  "Aanya sun rahi hai 👂";
+
+ };
+
+ speechSynthesis.speak(u);
+}
+
+
+/* Gemini ko message bhejna */
+async function askAanya(text){
+
+ bubble(text,true);
+
+ statusEl.textContent=
+ "Aanya soch rahi hai…";
+
+ try{
+
+  const response=await fetch(API,{
+
+   method:"POST",
+
+   headers:{
+    "Content-Type":"application/json"
+   },
+
+   body:JSON.stringify({
+    message:text
+   })
+
+  });
+
+  if(!response.ok){
+   throw new Error("HTTP "+response.status);
+  }
+
+  const data=await response.json();
+
+  const reply=
+   data.reply ||
+   data.response ||
+   data.message ||
+   data.text;
+
+  if(!reply){
+   throw new Error("No reply");
+  }
+
+  bubble(reply);
+
+  speak(reply);
+
+ }
+ catch(error){
+
+  console.error(error);
+
+  statusEl.textContent=
+  "Backend se reply nahi mila";
+
+  toastMsg(
+   "Gemini/Render backend check karo"
+  );
+
+ }
+}
+
+
+/* Voice Recognition */
+function initRecognition(){
+
+ const SpeechRecognition=
+  window.SpeechRecognition ||
+  window.webkitSpeechRecognition;
+
+ if(!SpeechRecognition){
+
+  toastMsg(
+   "Chrome me voice input try karo"
+  );
+
+  return null;
+ }
+
+ const r=new SpeechRecognition();
+
+ r.lang="hi-IN";
+
+ r.interimResults=false;
+
+ r.continuous=false;
+
+
+ r.onstart=()=>{
+
+  listening=true;
+
+  talk.textContent="⏺️";
+
+  statusEl.textContent=
+   "Main sun rahi hoon… bolo 👂";
+
+ };
+
+
+ r.onresult=(event)=>{
+
+  const text=
+   event.results[0][0].transcript.trim();
